@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>26年标签库 · 树状图</title>
+<style>
+body{margin:0;background:#f4f6f9;font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.bar{flex:none;background:#0f172a;color:#fff;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bar h1{font-size:16px;margin:0;font-weight:600}
+.bar .info{font-size:12px;color:#cbd5e1}
+.bar .ctrl{margin-left:auto;display:flex;gap:8px;align-items:center}
+.bar button{background:#1e293b;color:#fff;border:1px solid #334155;border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer}
+.bar button:hover{background:#334155}
+.bar input[type=range]{width:140px}
+.stage{flex:1;min-height:0;overflow:auto;padding:16px}
+#svg{background:#fff;border:1px solid #e2e8f0;border-radius:10px;display:block}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>26年标签库（规范化版）· 树状图</h1>
+  <span class="info" id="info"></span>
+  <div class="ctrl">
+    <button id="zin">放大 +</button>
+    <button id="zout">缩小 −</button>
+    <button id="zrst">重置</button>
+    <input type="range" id="zoom" min="20" max="200" value="70">
+    <span class="info" id="zval">70%</span>
+  </div>
+</div>
+<div class="stage"><svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg></div>
+<script>
+const DATA = {"name":"26年标签库","children":[{"name":"内容类目","children":[{"name":"美妆","children":[{"name":"唇妆","children":[]},{"name":"眼妆","children":[]},{"name":"美甲","children":[]},{"name":"香水","children":[]},{"name":"仿妆","children":[]}]},{"name":"护肤","children":[{"name":"护肤","children":[]}]},{"name":"个人护理","children":[{"name":"变美","children":[]},{"name":"医美整形","children":[]}]},{"name":"母婴","children":[{"name":"婴童时尚","children":[]},{"name":"孕产经验","children":[]},{"name":"育儿经验","children":[]},{"name":"宝宝才艺","children":[]},{"name":"宝宝写真","children":[]},{"name":"亲子生活","children":[]},{"name":"作业辅导","children":[]}]},{"name":"时尚","children":[{"name":"穿搭ootd","children":[]},{"name":"穿搭合集","children":[]},{"name":"配饰","children":[]},{"name":"发型","children":[]},{"name":"箱包","children":[]},{"name":"鞋靴","children":[]},{"name":"颜值","children":[]},{"name":"身材","children":[]},{"name":"奢侈品","children":[]}]},{"name":"美食","children":[{"name":"减脂餐","children":[]},{"name":"吃播","children":[]},{"name":"甜品","children":[]},{"name":"咖啡","children":[]},{"name":"酒","children":[]},{"name":"茶","children":[]},{"name":"饮料","children":[]},{"name":"零食","children":[]},{"name":"美食教程","children":[]}]},{"name":"家居家装","children":[{"name":"装修","children":[]},{"name":"花艺园艺","children":[]},{"name":"家电","children":[]},{"name":"室内设计","children":[]},{"name":"居家经验","children":[]}]},{"name":"影视综资讯","children":[{"name":"动漫","children":[]},{"name":"娱乐营销号","children":[]},{"name":"影视","children":[]},{"name":"民生资讯","children":[]},{"name":"解说","children":[]},{"name":"短剧","children":[]},{"name":"追星","children":[]},{"name":"时尚资讯","children":[]},{"name":"广告","children":[]},{"name":"体育","children":[]},{"name":"大厂","children":[]},{"name":"文案","children":[]},{"name":"科技","children":[]},{"name":"搬运","children":[]}]},{"name":"宠物","children":[{"name":"猫","children":[]},{"name":"狗","children":[]},{"name":"动物其他","children":[]},{"name":"配餐","children":[]}]},{"name":"文化艺术","children":[{"name":"文化","children":[]},{"name":"非遗","children":[]}]},{"name":"运动健身","children":[{"name":"减脂塑形","children":[]},{"name":"钓鱼","children":[]},{"name":"滑雪","children":[]},{"name":"网球","children":[]},{"name":"滑板","children":[]},{"name":"乒乓球","children":[]},{"name":"羽毛球","children":[]},{"name":"足球","children":[]},{"name":"棒球","children":[]},{"name":"篮球","children":[]},{"name":"高尔夫球","children":[]},{"name":"跑步","children":[]},{"name":"跑步","children":[{"name":"户外跑","children":[]},{"name":"城市跑","children":[]}],"_isMid":true},{"name":"台球","children":[]},{"name":"游泳","children":[]},{"name":"蹦极","children":[]},{"name":"健身","children":[]},{"name":"攀岩","children":[]},{"name":"骑行","children":[]},{"name":"跑酷","children":[]},{"name":"瑜伽","children":[]},{"name":"跳伞","children":[]},{"name":"普拉提","children":[]},{"name":"徒步","children":[]},{"name":"健身操","children":[]},{"name":"排球","children":[]}]},{"name":"兴趣爱好","children":[{"name":"谷子","children":[]},{"name":"抽卡","children":[]},{"name":"流麻","children":[]},{"name":"盲盒","children":[]},{"name":"咕卡","children":[]},{"name":"痛包","children":[]},{"name":"手办","children":[]},{"name":"绘画","children":[]},{"name":"手工","children":[]},{"name":"阅读","children":[]},{"name":"文具","children":[]},{"name":"舞蹈","children":[]},{"name":"周边","children":[]},{"name":"手账爱好者","children":[]},{"name":"二次元人群","children":[]},{"name":"古装爱好者","children":[]},{"name":"书法爱好者","children":[]},{"name":"粘土","children":[]},{"name":"桌搭","children":[]},{"name":"游戏","children":[]}]},{"name":"剧情","children":[{"name":"分饰","children":[]},{"name":"多人","children":[]},{"name":"搞笑","children":[]},{"name":"抽象","children":[]}]},{"name":"生活","children":[{"name":"校园生活","children":[]},{"name":"职场生活","children":[]},{"name":"极简主义","children":[]},{"name":"自律生活","children":[]},{"name":"乡村生活","children":[]},{"name":"搞钱赚钱","children":[]},{"name":"省钱薅羊毛","children":[]},{"name":"本地逛吃","children":[]},{"name":"公益","children":[]},{"name":"赶海","children":[]}]},{"name":"教育","children":[{"name":"大学教育","children":[]},{"name":"学习日常","children":[]},{"name":"留学教育","children":[]},{"name":"考公考研","children":[]},{"name":"职业考试","children":[]},{"name":"中考","children":[]},{"name":"高考","children":[]},{"name":"技能训练","children":[]},{"name":"语言教育","children":[{"name":"英语","children":[]},{"name":"日语","children":[]},{"name":"韩语","children":[]},{"name":"语言其他","children":[]}],"_isMid":true}]},{"name":"情感","children":[{"name":"情感","children":[]},{"name":"星座","children":[]},{"name":"女性成长","children":[]},{"name":"MBTI","children":[]},{"name":"玄学","children":[]}]},{"name":"摄影","children":[{"name":"人文摄影","children":[]},{"name":"摄影技巧","children":[]},{"name":"胶片摄影","children":[]},{"name":"人像摄影","children":[]},{"name":"风光摄影","children":[]},{"name":"p图","children":[]},{"name":"电影感","children":[]}]},{"name":"科技数码","children":[{"name":"移动数码","children":[]},{"name":"APP","children":[]},{"name":"AI","children":[]},{"name":"AIGC","children":[]}]},{"name":"户外","children":[{"name":"旅行","children":[]},{"name":"露营","children":[]}]},{"name":"音乐","children":[{"name":"唱歌","children":[]},{"name":"乐器","children":[]},{"name":"乐队","children":[]},{"name":"音乐创作","children":[]}]},{"name":"健康养生","children":[{"name":"中医","children":[]},{"name":"食养","children":[]},{"name":"中式运动","children":[]}]},{"name":"汽车","children":[{"name":"车饰","children":[]},{"name":"摩托车","children":[]},{"name":"房车","children":[]}]},{"name":"商业财经","children":[{"name":"金融","children":[]},{"name":"黄金","children":[]},{"name":"股市","children":[]},{"name":"理财","children":[]}]},{"name":"素材","children":[{"name":"聊天记录","children":[]},{"name":"朋友圈","children":[]},{"name":"表情包","children":[]},{"name":"头像","children":[]},{"name":"猫meme","children":[]},{"name":"梗图","children":[]}]},{"name":"其他","children":[{"name":"联名IP","children":[]},{"name":"跨境电商","children":[]},{"name":"新媒体创业","children":[]},{"name":"支教","children":[]}]}]},{"name":"博主人设","children":[{"name":"人设风格","children":[{"name":"贵妇","children":[]},{"name":"辣妈","children":[]}]},{"name":"家庭角色","children":[{"name":"萌娃","children":[]},{"name":"青少年【三年级以上】","children":[]},{"name":"爸爸","children":[]},{"name":"老人","children":[]}]},{"name":"出镜人关系","children":[{"name":"情侣","children":[]},{"name":"夫妻","children":[]},{"name":"家庭","children":[]},{"name":"闺蜜","children":[]},{"name":"兄弟","children":[]},{"name":"婆媳","children":[]}]},{"name":"出镜人数","children":[{"name":"多人","children":[]}]},{"name":"可出镜","children":[{"name":"猫","children":[]},{"name":"狗","children":[]},{"name":"动物其他","children":[]},{"name":"多娃","children":[]},{"name":"外国人","children":[]},{"name":"多人","children":[]}]},{"name":"生活背景","children":[{"name":"留学背景","children":[]},{"name":"海外华侨","children":[]},{"name":"上过综艺","children":[]},{"name":"混血儿","children":[]},{"name":"明星","children":[]},{"name":"职场","children":[{"name":"大厂","children":[]}],"_isMid":true}]},{"name":"出镜环境","children":[{"name":"庭院","children":[]},{"name":"小户型","children":[]},{"name":"大平层","children":[]},{"name":"别墅","children":[]},{"name":"商超","children":[]},{"name":"宿舍","children":[]},{"name":"独居","children":[]}]}]},{"name":"内容形式","children":[{"name":"出镜人物性别","children":[{"name":"男","children":[]},{"name":"女","children":[]}]},{"name":"形式","children":[{"name":"vlog","children":[]},{"name":"探店","children":[]},{"name":"测评","children":[]},{"name":"图文横测","children":[]},{"name":"干货科普","children":[]},{"name":"plog","children":[]},{"name":"成分解析","children":[]},{"name":"街访","children":[]},{"name":"挑战","children":[]},{"name":"文案","children":[]},{"name":"大字报","children":[]},{"name":"访谈","children":[]},{"name":"收纳补货","children":[]},{"name":"好物分享","children":[]},{"name":"变装","children":[]},{"name":"三拼/四拼","children":[]},{"name":"开箱","children":[]},{"name":"翻包","children":[]},{"name":"手持","children":[]},{"name":"温情","children":[]},{"name":"配音","children":[]}]},{"name":"风格","children":[{"name":"韩系","children":[]},{"name":"欧美风","children":[]},{"name":"知性","children":[]},{"name":"校园风","children":[]},{"name":"沉浸式","children":[]}]},{"name":"颜值风格","children":[{"name":"中性风","children":[]}]},{"name":"家装","children":[{"name":"田园风","children":[]}]},{"name":"穿衣","children":[{"name":"创意","children":[]}]}]},{"name":"垂类专业","children":[{"name":"肤质肤色","children":[{"name":"油皮","children":[]},{"name":"干皮","children":[]},{"name":"混合肌","children":[]},{"name":"敏感肌","children":[]},{"name":"痘痘肌","children":[]},{"name":"瑕疵皮","children":[]},{"name":"白皮","children":[]},{"name":"黄皮","children":[]}]},{"name":"皮肤养护","children":[{"name":"保湿补水","children":[]},{"name":"美白","children":[]},{"name":"淡斑","children":[]},{"name":"祛黄","children":[]},{"name":"抗氧化","children":[]},{"name":"抗老","children":[]},{"name":"祛皱","children":[]},{"name":"抗炎","children":[]},{"name":"修复","children":[]},{"name":"祛痘祛闭口","children":[]},{"name":"隔离防晒","children":[]},{"name":"控油","children":[]},{"name":"眼部护理","children":[]}]},{"name":"家装","children":[{"name":"家装风格","children":[{"name":"氛围感","children":[]},{"name":"极简","children":[]},{"name":"中式","children":[]},{"name":"日式原木风","children":[]},{"name":"复古","children":[]}],"_isMid":true},{"name":"家装颜色","children":[{"name":"奶油风","children":[]},{"name":"多巴胺","children":[]}],"_isMid":true}]},{"name":"穿衣风格","children":[{"name":"小众设计","children":[]},{"name":"洛丽塔","children":[]},{"name":"新中式","children":[]},{"name":"古装","children":[]},{"name":"亚裔风","children":[]},{"name":"潮流","children":[]}]},{"name":"颜值风格","children":[{"name":"青春元气","children":[]},{"name":"医美","children":[]},{"name":"幼态","children":[]}]}]}]};
+const COLX = [24, 189, 354, 519, 684];
+const GAP = 36, H = 22, PADX = 10, FS = 13;
+const FONT = '13px -apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif';
+const CFG = [
+  {fill:'#0f172a', color:'#ffffff'},
+  {fill:'#1d4ed8', color:'#ffffff'},
+  {fill:'#0d9488', color:'#ffffff'},
+  {fill:'#eef2f7', color:'#334155'},
+  {fill:'#eef2f7', color:'#334155'}
+];
+const MID_FILL = '#b45309';
+
+const mc = document.createElement('canvas').getContext('2d');
+mc.font = FONT;
+function textW(t){ return Math.round(mc.measureText(t).width * 100) / 100; }
+
+// 计算宽度
+let _uid = 0, nodes = [], edges = [];
+(function walk(n, d, p){
+  n.d = d;
+  n.parent = p || null;
+  n._id = _uid++;
+  n.w = Math.round((textW(n.name) + PADX * 2) * 10) / 10;
+  n.children.forEach(c => walk(c, d + 1, n));
+})(DATA, 0, null);
+
+// 纵向布局：叶子按序递增，父节点居中于子节点
+let cur = 15;
+(function place(n){
+  if (n.d === 0) { /* 根最后算 */ }
+  if (!n.children.length) { n.y = cur; cur += GAP; return; }
+  n.children.forEach(place);
+  n.y = (n.children[0].y + n.children[n.children.length - 1].y) / 2;
+})(DATA);
+
+// 分支配色：每个二级维度分配一个区分色，后代继承，用于连线着色，便于分辨归属
+const PAL = [];
+for (let i = 0; i < 64; i++) PAL.push(`hsl(${Math.round((i*137.5)%360)},62%,48%)`);
+let dimIdx = 0;
+(function assignBC(n){
+  if (n.d === 2) n.bc = PAL[dimIdx++ % PAL.length];
+  else if (n.d === 0) n.bc = '#94a3b8';
+  else n.bc = n.parent ? n.parent.bc : '#94a3b8';
+  n.children.forEach(assignBC);
+})(DATA);
+
+// 列宽统计后定 viewBox
+const colMax = [0,0,0,0,0];
+(function collect(n){ colMax[n.d] = Math.max(colMax[n.d], n.w); n.children.forEach(collect); })(DATA, 0);
+const VW = COLX[4] + colMax[4] + 60;
+const VH = cur + 15;
+
+// 生成 SVG
+const svg = document.getElementById('svg');
+svg.setAttribute('viewBox', `0 0 ${VW} ${VH}`);
+svg.setAttribute('width', VW);
+svg.setAttribute('height', VH);
+const NS = 'http://www.w3.org/2000/svg';
+
+const gPath = document.createElementNS(NS, 'g');
+const gNode = document.createElementNS(NS, 'g');
+gPath.setAttribute('fill', 'none');
+gPath.setAttribute('stroke', '#94a3b8');
+gPath.setAttribute('stroke-width', '1.5');
+svg.appendChild(gPath);
+svg.appendChild(gNode);
+
+function edge(p, c){
+  const x1 = p.x + p.w, y1 = p.y + H/2;   // 父节点右缘中点
+  const x2 = COLX[c.d],   y2 = c.y + H/2; // 子节点左缘中点
+  const mx = (x1 + x2) / 2;               // 控制点 x：曲线在中间平滑过渡，不再共用竖主干
+  const d = `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+  const el = document.createElementNS(NS, 'path');
+  el.setAttribute('d', d);
+  el.setAttribute('stroke', c.bc);
+  el.setAttribute('stroke-width', '1.6');
+  el.setAttribute('fill', 'none');
+  el._p = p._id; el._c = c._id;
+  edges.push(el);
+  gPath.appendChild(el);
+}
+
+let nNodes = 0, nTags = 0;
+(function render(n){
+  n.x = COLX[n.d];
+  const cfg = (n.d === 3 && n.children.length) ? {fill: MID_FILL, color:'#ffffff'} : CFG[n.d];
+  const g = document.createElementNS(NS, 'g');
+  g.style.cursor = 'pointer';
+  const r = document.createElementNS(NS, 'rect');
+  r.setAttribute('x', n.x); r.setAttribute('y', n.y);
+  r.setAttribute('width', n.w); r.setAttribute('height', H);
+  r.setAttribute('rx', 6); r.setAttribute('fill', cfg.fill);
+  g.appendChild(r);
+  const t = document.createElementNS(NS, 'text');
+  t.setAttribute('x', n.x + PADX); t.setAttribute('y', n.y + 11);
+  t.setAttribute('font-size', FS); t.setAttribute('font-family', 'inherit');
+  t.setAttribute('fill', cfg.color);
+  t.setAttribute('dominant-baseline', 'middle');
+  t.textContent = n.name;
+  g.appendChild(t);
+  gNode.appendChild(g);
+  n._g = g;
+  nodes.push(n);
+  nNodes++;
+  if (!n.children.length && n.d >= 3) nTags++;
+  n.children.forEach(c => { edge(n, c); render(c); });
+})(DATA);
+
+// 悬停高亮整条分支：鼠标移到某个节点，其整条子树（含连线）高亮、其余淡出，归属一目了然
+function descendants(n, acc){ acc.push(n); n.children.forEach(c => descendants(c, acc)); return acc; }
+function highlight(n){
+  const set = new Set(descendants(n, []).map(x => x._id));
+  nodes.forEach(m => m._g.style.opacity = set.has(m._id) ? '1' : '0.12');
+  edges.forEach(e => e.style.opacity = (set.has(e._p) && set.has(e._c)) ? '1' : '0.12');
+}
+function clearHL(){
+  nodes.forEach(m => m._g.style.opacity = '1');
+  edges.forEach(e => e.style.opacity = '1');
+}
+nodes.forEach(n => {
+  n._g.addEventListener('mouseenter', () => highlight(n));
+  n._g.addEventListener('mouseleave', clearHL);
+});
+
+document.getElementById('info').textContent =
+  `根 → 族 → 维度 → 中间层 → 标签 ｜ 共 ${nNodes} 个节点（标签 ${nTags} 个，按标签字典原值绘制）｜ 悬停任意节点可高亮其所属分支`;
+
+// 缩放
+let z = 1;
+function setZ(v){
+  z = Math.min(2, Math.max(0.2, v));
+  // 直接改显示尺寸：viewBox 保证内部坐标不变，滚动条范围也随之正确
+  svg.style.width = (VW * z) + 'px';
+  svg.style.height = (VH * z) + 'px';
+  document.getElementById('zoom').value = Math.round(z * 100);
+  document.getElementById('zval').textContent = Math.round(z * 100) + '%';
+}
+document.getElementById('zin').onclick = () => setZ(z + 0.1);
+document.getElementById('zout').onclick = () => setZ(z - 0.1);
+document.getElementById('zrst').onclick = () => setZ(1);
+document.getElementById('zoom').oninput = e => setZ(e.target.value / 100);
+// 初始按容器宽度自适应（不超过 100%）
+(function init(){
+  const stage = document.querySelector('.stage');
+  const fit = Math.min(1, (stage.clientWidth - 48) / VW);
+  setZ(Math.max(0.35, Math.round(fit * 100) / 100));
+})();
+</script>
+</body>
+</html>
